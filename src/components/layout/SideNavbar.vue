@@ -1,0 +1,38 @@
+<template>
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+                <li>
+                    <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-table fa-fw"></i> Tables<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="/diaries/list/{{email}}"><i class="fa fa-edit"></i> Dairy</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="/freeboards"><i class="fa fa-list-alt"></i> Free Board</a>
+                </li>
+                <li>
+                    <a href="/api/movies/page"><i class="glyphicon glyphicon-film"></i> 영화 검색</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style>
+
+</style>

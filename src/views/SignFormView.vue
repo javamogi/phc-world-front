@@ -7,9 +7,12 @@
                         <h3 class="panel-title">Please Sign Up</h3>
                     </div>
                     <div class="panel-body">
-                    	<!-- <div class="alert alert-danger alert-dismissable">
+                        <template v-if="statusCode === 409">
+                    	<div class="alert alert-danger alert-dismissable">
                         	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                         </div> -->
+                            {{ errorMessage }}
+                         </div>
+                        </template>
                         <form v-on:submit.prevent="submit" role="form" method="post" action="">
                             <fieldset>
                                 <div class="form-group">
@@ -40,7 +43,9 @@ export default {
         return {
             email: '',
             password: '',
-            name: ''
+            name: '',
+            statusCode: '',
+            errorMessage: ''
         }
     },
     methods: {
@@ -58,7 +63,8 @@ export default {
                 }
             })
             .catch((res) => {
-                console.error(res);
+                this.statusCode = res.response.data.statusCode;
+                this.errorMessage = res.response.data.error;
             })
         }
     }

@@ -16,7 +16,7 @@
                                     <i class="fa fa-comment fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">countOfAnswer</div>
+                                    <div class="huge">{{ countOfAnswer }}</div>
                                     <div>New Comments!</div>
                                 </div>
                             </div>
@@ -42,7 +42,7 @@
                                     <i class="fa fa-list-alt fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">countOfFreeBoard</div>
+                                    <div class="huge">{{countOfFreeBoard}}</div>
                                     <div>New Posts!</div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                     <i class="fa fa-book fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">countOfDiary</div>
+                                    <div class="huge">{{countOfDiary}}</div>
                                     <div>New Posts!</div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                     <i class="fa fa-bell fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">countOfAlert</div>
+                                    <div class="huge">{{countOfAlert}}</div>
                                     <div>New Posts!</div>
                                 </div>
                             </div>
@@ -120,9 +120,9 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="list-group">
-                                <a href="/dashboard/timeline/{{id}}" class="list-group-item">
-                                    <i class="fa fa-{{icon}} fa-fw"></i> type
-                                    <span class="pull-right text-muted small"><em>formattedSaveDate</em>
+                                <a href="/dashboard/timeline/{{timeline.id}}" v-for="timeline in timelineList" :key="timeline.id" class="list-group-item">
+                                    <i :class="[timeline.icon]"></i> {{timeline.type}}
+                                    <span class="pull-right text-muted small"><em>{{timeline.formattedSaveDate}}</em>
                                     </span>
                                 </a>
                             </div>
@@ -144,8 +144,39 @@
 </template>
 
 <script>
-export default {
+import axios from 'axios'
 
+export default {
+    data() {
+        return {
+            countOfAnswer: '0',
+            countOfFreeBoard: '0',
+            countOfDiary: '0',
+            countOfAlert: '0',
+            timelineList : []
+        }
+    },
+    beforeCreate(){
+        axios
+        .get('http://localhost:8080/api/dashboard', {})
+        .then((res) => {
+            console.log("------ axios Get 성공---------");
+            console.log(res.data);
+            this.countOfAnswer = res.data.countOfAnswer;
+            this.countOfFreeBoard = res.data.countOfFreeBoard;
+            this.countOfDiary = res.data.countOfDiary;
+            this.countOfAlert = res.data.countOfAlert;
+            let temp = res.data.timelineList;
+            for(let i = 0; i < temp.length; i++){
+                let timeline = temp[i];
+                timeline.icon = "fa fa-" + timeline.icon + " fa-fw"
+            }
+            this.timelineList = temp;
+        })
+        .catch((res) => {
+            console.error(res);
+        })
+    }
 }
 </script>
 

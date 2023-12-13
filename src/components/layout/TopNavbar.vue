@@ -14,17 +14,17 @@
             
             <ul class="nav navbar-top-links navbar-right">
 			<li class="dropdown">
-               <a href="/users/loginForm"><i class="fa fa-sign-in"> 로그인</i></a>
+               <a href="/login"><i class="fa fa-sign-in"> 로그인</i></a>
              </li>
                 <!-- /.dropdown -->
 			<li class="dropdown">
-               <a href="/users/form"><i class="fa fa-pencil-square-o"> 회원가입</i></a>
+               <a href="/sign"><i class="fa fa-pencil-square-o"> 회원가입</i></a>
             </li>
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
 
-            <SideNavbar />
+            <SideNavbar v-if="$route.name !== 'sign'"/>
         </nav>
 </template>
 

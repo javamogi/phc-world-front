@@ -157,8 +157,9 @@ export default {
         }
     },
     beforeCreate(){
+        const apiUrl = this.$store.state.apiUrl;
         axios
-        .get('http://localhost:8080/api/dashboard', {})
+        .get(apiUrl + '/api/dashboard', {})
         .then((res) => {
             console.log("------ axios Get 성공---------");
             console.log(res.data);

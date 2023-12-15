@@ -102,7 +102,7 @@ export default {
             if(this.show){
                 return;
             }
-            const apiUrl = this.$store.state.apiUrl;
+            const apiUrl = process.env.VUE_APP_API_URL;
 
             this.statusCode = '';
             const userData = new FormData();

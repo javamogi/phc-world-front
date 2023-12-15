@@ -89,24 +89,30 @@ export default {
             }
            
             const apiUrl = process.env.VUE_APP_API_URL;
+            const instance = axios.create({
+                baseURL: apiUrl,
+                headers: {
+                    "Content-Type": 'application/json'
+                }
+            })
+            const userData = JSON.stringify({
+                email: this.email,
+                password: this.password
+            })
 
-            this.statusCode = '';
-            const userData = new FormData();
-            userData.append("email", this.email);
-            userData.append("password", this.password);
-
-            axios
-            .post(apiUrl + '/api/users/login', userData, {})
+            instance
+            .post('/api/users/login', userData, {})
             .then((res) => {
+                console.log(res);
                 if(res.status === 200){
                     this.$store.dispatch('setToken', res.data.accessToken);
                     this.$store.dispatch('setGrantType', res.data.grantType);
                     localStorage.setItem('refreshToken', res.data.refreshToken);
-                    this.$router.push('/');
+                    // this.$router.push('/');
                 }
             })
             .catch((res) => {
-                // console.error(res);
+                console.error(res);
                 let statusCode = res.response.status;
                 this.statusCode = statusCode;
                 this.show = true;

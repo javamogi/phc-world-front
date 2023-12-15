@@ -156,17 +156,31 @@ export default {
             timelineList : []
         }
     },
+    methods: {
+        setCounts(data){
+            this.countOfAnswer = data.countOfAnswer;
+            this.countOfFreeBoard = data.countOfFreeBoard;
+            this.countOfDiary = data.countOfDiary;
+            this.countOfAlert = data.countOfAlert;
+        }
+    },
     beforeCreate(){
-        const apiUrl = this.$store.state.apiUrl;
-        axios
-        .get(apiUrl + '/api/dashboard', {})
+        const token = this.$store.getters.getToken;
+        const grantType = this.$store.getters.getGrantType;
+        const apiUrl = process.env.VUE_APP_API_URL;
+        const instance = axios.create({
+            baseURL: apiUrl,
+            headers: {
+                Authorization: grantType + token
+            }
+        })
+
+        instance
+        .get('/api/dashboard', {})
         .then((res) => {
             console.log("------ axios Get 성공---------");
             console.log(res.data);
-            this.countOfAnswer = res.data.countOfAnswer;
-            this.countOfFreeBoard = res.data.countOfFreeBoard;
-            this.countOfDiary = res.data.countOfDiary;
-            this.countOfAlert = res.data.countOfAlert;
+            this.setCounts(res.data);
             let temp = res.data.timelineList;
             for(let i = 0; i < temp.length; i++){
                 let timeline = temp[i];

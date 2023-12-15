@@ -88,7 +88,7 @@ export default {
                 return;
             }
            
-            const apiUrl = this.$store.state.apiUrl;
+            const apiUrl = process.env.VUE_APP_API_URL;
 
             this.statusCode = '';
             const userData = new FormData();
@@ -99,9 +99,10 @@ export default {
             .post(apiUrl + '/api/users/login', userData, {})
             .then((res) => {
                 if(res.status === 200){
-                    console.log(res);
-                    // TO DO 토큰 처리
-                    // location.href='/';
+                    this.$store.dispatch('setToken', res.data.accessToken);
+                    this.$store.dispatch('setGrantType', res.data.grantType);
+                    localStorage.setItem('refreshToken', res.data.refreshToken);
+                    this.$router.push('/');
                 }
             })
             .catch((res) => {

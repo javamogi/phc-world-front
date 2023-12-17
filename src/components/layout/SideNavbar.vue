@@ -6,10 +6,12 @@
                     <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-table fa-fw"></i> Tables<span class="fa arrow"></span></a>
+                    <a href="#">
+                        <i class="fa fa-table fa-fw"></i> Tables<span class="fa arrow"></span>
+                    </a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="/diaries/list/{{email}}"><i class="fa fa-edit"></i> Dairy</a>
+                            <a href="/diary"><i class="fa fa-edit"></i> Dairy</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->

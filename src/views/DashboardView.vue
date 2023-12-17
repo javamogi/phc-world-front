@@ -164,7 +164,7 @@ export default {
             this.countOfAlert = data.countOfAlert;
         }
     },
-    beforeCreate(){
+    beforeMount(){
         const token = this.$store.getters.getToken;
         const grantType = this.$store.getters.getGrantType;
         const apiUrl = process.env.VUE_APP_API_URL;

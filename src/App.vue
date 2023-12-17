@@ -11,13 +11,13 @@
 </template>
 
 <script>
-  import TopNavbar from '@/components/layout/TopNavbar.vue'
+import TopNavbar from '@/components/layout/TopNavbar.vue'
 
-  export default {
-    components: {
-      TopNavbar,
+export default {
+  components: {
+      TopNavbar
     }
-  }
+}
 </script>
 
 <style>

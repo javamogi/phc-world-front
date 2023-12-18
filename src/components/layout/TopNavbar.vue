@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">PHC World</a>
+                <router-link class="navbar-brand" to="/">PHC World</router-link>
             </div>
             <!-- /.navbar-header -->
             
@@ -76,7 +76,8 @@
                             <a href="/profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li>
-                            <a href="/setting"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            <!-- <a href="/setting"><i class="fa fa-gear fa-fw"></i> Settings</a> -->
+                            <router-link to="setting"><i class="fa fa-gear fa-fw"></i> Settings</router-link>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -108,8 +109,8 @@ import SideNavbar from '@/components/layout/SideNavbar.vue'
 export default {
     data(){
         return {
-            isLogin: false,
-            isView: true 
+            isLogin: this.$store.getters.isLogin,
+            isView: true
         }
     },
     components: {
@@ -128,7 +129,8 @@ export default {
             this.isLogin = val;
         },
         updateRouteName(name){
-            if(name === 'sign' || name === 'login'){
+            this.isView = true;
+            if(name === 'sign' || name === 'login' || name === 'setting'){
                 this.isView = false;
             }
         }

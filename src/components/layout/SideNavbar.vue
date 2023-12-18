@@ -3,7 +3,7 @@
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
                 <li>
-                    <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    <router-link to="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</router-link>
                 </li>
                 <li>
                     <a href="#">

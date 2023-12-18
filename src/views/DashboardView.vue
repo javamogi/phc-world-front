@@ -164,9 +164,9 @@ export default {
             this.countOfAlert = data.countOfAlert;
         }
     },
-    beforeMount(){
+    created(){
         const token = this.$store.getters.getToken;
-        const grantType = this.$store.getters.getGrantType;
+        const grantType = "Bearer "
         const apiUrl = process.env.VUE_APP_API_URL;
         const instance = axios.create({
             baseURL: apiUrl,

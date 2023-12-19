@@ -9,6 +9,7 @@
 						<a href="#" title="이미지 변경" class="editImage">
 							<i class="fa fa-camera"></i>
 						</a>
+                        <input type="file" accept="image/*" @change="changeImg"/>
 					</div>
 				</div>
                     <div class="panel-heading">
@@ -29,13 +30,13 @@
                                     <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus :value="email" readonly="readonly">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" :value="password">
+                                    <input class="form-control" placeholder="Password" name="password" type="password" v-model="password">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Name" name="name" type="text" v-model="name">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Date" name="date" type="text" v-model="createDate">
+                                    <input class="form-control" placeholder="Date" name="date" type="text" :value="createDate">
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
                                 <button type="submit" class="btn btn-lg btn-success btn-block">개인정보수정</button>
@@ -62,29 +63,34 @@ export default {
             imgUrl: null,
             show: false,
             errorMessage: null,
-            statusCode: null
+            statusCode: null,
+            imageName: null,
+            imageData: null
         }
     },
     methods: {
         submit(){
-            // const token = this.$store.getters.getToken;
-            // const grantType = this.$store.getters.getGrantType;
             const token = this.$store.getters.getToken;
             const grantType = "Bearer ";
             const apiUrl = process.env.VUE_APP_API_URL;
             const instance = axios.create({
                 baseURL: apiUrl,
                 headers: {
-                    Authorization: grantType + token
+                    Authorization: grantType + token,
+                    "Content-Type": 'application/json'
                 }
             })
 
             this.statusCode = '';
-            const userData = new FormData();
-            userData.append("id", this.id);
-            userData.append("email", this.email);
-            userData.append("password", this.password);
-            userData.append("name", this.name);
+
+            const userData = JSON.stringify({
+                id: this.id,
+                email: this.email,
+                password: this.password,
+                name: this.name,
+                imageName: this.imageName,
+                imageData: this.imageData
+            })
 
             instance
             .patch(apiUrl + '/api/users', userData, {})
@@ -101,11 +107,28 @@ export default {
                     this.errorMessages = res.response.data.error;
                 }
             })
+        },
+        changeImg(event) { 
+            const files = event.target?.files;
+            if (files.length > 0){
+                const file = files[0];
+                const reader = new FileReader() ;
+                
+                reader.onload = (e) => {
+                    const index = e.target.result.indexOf(',') + 1;
+                    const encodedImg = e.target.result.substring(
+                                    index,
+                                    e.target.result.length);
+                    this.imageData = encodedImg;
+                    this.imageName = file.name;
+                    this.imgUrl = e.target.result; 
+                } 
+
+                reader.readAsDataURL(file);
+            }
         }
     },
     beforeMount(){
-        // const token = this.$store.getters.getToken;
-        // const grantType = this.$store.getters.getGrantType;
         const token = this.$store.getters.getToken;
         const grantType = "Bearer ";
         const apiUrl = process.env.VUE_APP_API_URL;

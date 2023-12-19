@@ -6,8 +6,8 @@
 import axios from 'axios'
 
 export default {
-    beforeCreate(){
-        const token = this.$store.state.getToken;
+    created(){
+        const token = this.$store.getters.getToken;
         const grantType = "Bearer "
         const apiUrl = process.env.VUE_APP_API_URL;
         const instance = axios.create({

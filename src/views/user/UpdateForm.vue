@@ -113,7 +113,6 @@ export default {
             if (files.length > 0){
                 const file = files[0];
                 const reader = new FileReader() ;
-                
                 reader.onload = (e) => {
                     const index = e.target.result.indexOf(',') + 1;
                     const encodedImg = e.target.result.substring(
@@ -148,7 +147,7 @@ export default {
             this.email = res.data.email;
             this.name = res.data.name;
             this.createDate = res.data.createDate;
-            this.imgUrl = "static/images/profile/" + res.data.profileImage;
+            this.imgUrl = res.data.profileImage;
         })
         .catch((res) => {
             console.error(res);

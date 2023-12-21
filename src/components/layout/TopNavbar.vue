@@ -14,7 +14,7 @@
             
             <ul class="nav navbar-top-links navbar-right">
             <template v-if="isLogin">
-                <li class="dropdown">
+                <!-- <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope fa-fw"></i><span id="countOfMessageHeader" class="badge badge-danger">countMessage</span> <i class="fa fa-caret-down"></i>
                     </a>
@@ -40,9 +40,9 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 <!-- /.dropdown -->
-                <li class="dropdown">
+                <!-- <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
@@ -65,7 +65,7 @@
                             </a>
                         </li>       
                     </ul>
-                </li>
+                </li> -->
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">

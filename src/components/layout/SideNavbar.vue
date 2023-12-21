@@ -5,7 +5,7 @@
                 <li>
                     <router-link to="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</router-link>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="#">
                         <i class="fa fa-table fa-fw"></i> Tables<span class="fa arrow"></span>
                     </a>
@@ -14,8 +14,7 @@
                             <a href="/diary"><i class="fa fa-edit"></i> Dairy</a>
                         </li>
                     </ul>
-                    <!-- /.nav-second-level -->
-                </li>
+                </li> -->
                 <li>
                     <a href="/freeboards"><i class="fa fa-list-alt"></i> Free Board</a>
                 </li>

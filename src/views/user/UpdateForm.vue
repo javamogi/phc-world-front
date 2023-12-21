@@ -5,11 +5,14 @@
                 <div class="login-panel panel panel-default">
                 <div class="userProfileInfo">
                 	<div class="image text-center">
-						<img :src="imgUrl" alt="#" class="img-responsive">
-						<a href="#" title="이미지 변경" class="editImage">
+						<img :src="imgUrl" alt="#" class="img-responsive center-block">
+						<!-- <a href="#" title="이미지 변경" class="editImage">
 							<i class="fa fa-camera"></i>
-						</a>
-                        <input type="file" accept="image/*" @change="changeImg"/>
+						</a> -->
+                        <label for="file">
+                            <i id="camera" class="fa fa-camera"></i>
+                        </label>
+                        <input type="file" accept="image/*" @change="changeImg" id="file" name="file"/>
 					</div>
 				</div>
                     <div class="panel-heading">
@@ -19,7 +22,7 @@
                     	<!-- error message -->
                         <div v-show="show" class="alert alert-danger alert-dismissable">
                         	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                             {{errorMessage}} 
+                             {{errorMessages}} 
                          </div>
                          <!-- /error message -->
                     	
@@ -30,10 +33,10 @@
                                     <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus :value="email" readonly="readonly">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" v-model="password">
+                                    <input @keyup="regexPassword" class="form-control" placeholder="Password" name="password" type="password" v-model="password">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Name" name="name" type="text" v-model="name">
+                                    <input @keyup="regexName" class="form-control" placeholder="Name" name="name" type="text" v-model="name">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Date" name="date" type="text" :value="createDate">
@@ -62,14 +65,49 @@ export default {
             createDate: null,
             imgUrl: null,
             show: false,
-            errorMessage: null,
+            errorMessages: null,
             statusCode: null,
             imageName: null,
             imageData: null
         }
     },
     methods: {
+        regexPassword(){
+            let password = this.password;
+            if(password.length < 4){
+                this.statusCode = 400;
+                this.errorMessages = "비밀번호는 4자 이상으로 해야합니다.";
+                this.show = true;
+            } else {
+                this.show = false;
+            }
+        },
+        regexName(){
+            const regex = /^[가-힣a-zA-Z0-9]+$/;
+            let name = this.name;
+            if(name === ''){
+                console.log("-------------------------- null 체크 실행")
+                this.statusCode = 400;
+                this.errorMessages = "이름을 입력하세요.";
+                this.show = true;
+            } else if(!regex.test(name)){
+                this.statusCode = 400;
+                this.errorMessages = "이름은 한글, 영문, 숫자만 가능합니다.";
+                this.show = true;
+            } else if(name.length < 3){
+                this.statusCode = 400;
+                this.errorMessages = "이름은 영문 3자 이상 20자 이하 또는 한글 두자이상 6자 이하로 해야합니다.";
+                this.show = true;
+            } else {
+                this.show = false;
+            }
+        },
         submit(){
+            this.regexPassword();
+            this.regexName();
+            if(this.show){
+                return;
+            }
             const token = this.$store.getters.getToken;
             const grantType = "Bearer ";
             const apiUrl = process.env.VUE_APP_API_URL;
@@ -157,5 +195,10 @@ export default {
 </script>
 
 <style>
-
+#file {
+    display: none;
+}
+#camera {
+    cursor: pointer;
+}
 </style>

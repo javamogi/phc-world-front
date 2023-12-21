@@ -130,7 +130,7 @@ export default {
         },
         updateRouteName(name){
             this.isView = true;
-            if(name === 'sign' || name === 'login' || name === 'setting'){
+            if(name === 'sign' || name === 'login'){
                 this.isView = false;
             }
         }

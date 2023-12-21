@@ -54,8 +54,10 @@
 
 <script>
 import axios from 'axios'
+import authMixin from '@/components/checkToken'
 
 export default {
+    mixins: [authMixin],
     data(){
         return {
             id: null,
@@ -134,6 +136,7 @@ export default {
             .patch(apiUrl + '/api/users', userData, {})
             .then((res) => {
                 console.log(res);
+                alert("변경 성공");
             })
             .catch((res) => {
                 let statusCode = res.response.status;

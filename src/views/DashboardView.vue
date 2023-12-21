@@ -145,8 +145,10 @@
 
 <script>
 import axios from 'axios'
+import authMixin from '@/components/checkToken'
 
 export default {
+    mixins: [authMixin],
     data() {
         return {
             countOfAnswer: '0',
@@ -166,9 +168,6 @@ export default {
     },
     created(){
         const token = this.$store.getters.getToken;
-        if(token === null){
-            this.$router.push('/login');
-        }
         const grantType = "Bearer "
         const apiUrl = process.env.VUE_APP_API_URL;
         const instance = axios.create({

@@ -6,9 +6,6 @@
                 <div class="userProfileInfo">
                 	<div class="image text-center">
 						<img :src="imgUrl" alt="#" class="img-responsive center-block">
-						<!-- <a href="#" title="이미지 변경" class="editImage">
-							<i class="fa fa-camera"></i>
-						</a> -->
                         <label for="file">
                             <i id="camera" class="fa fa-camera"></i>
                         </label>
@@ -135,8 +132,9 @@ export default {
             instance
             .patch(apiUrl + '/api/users', userData, {})
             .then((res) => {
-                console.log(res);
-                alert("변경 성공");
+                if(res.status == 200){
+                    alert("변경 성공");
+                }
             })
             .catch((res) => {
                 let statusCode = res.response.status;
@@ -182,8 +180,6 @@ export default {
         instance
         .get('/api/users/userInfo', {})
         .then((res) => {
-            console.log("------ axios Get 성공---------");
-            console.log(res.data);
             this.id = res.data.id;
             this.email = res.data.email;
             this.name = res.data.name;

@@ -144,8 +144,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import authMixin from '@/components/checkToken'
+import Axios from '@/index'
 
 export default {
     mixins: [authMixin],
@@ -166,17 +166,7 @@ export default {
             this.countOfAlert = data.countOfAlert;
         },
         getTimelineData(){
-            const token = this.$store.getters.getToken;
-            const grantType = "Bearer "
-            const apiUrl = process.env.VUE_APP_API_URL;
-            const instance = axios.create({
-                baseURL: apiUrl,
-                headers: {
-                    Authorization: grantType + token
-                }
-            })
-
-            instance
+            Axios
             .get('/api/dashboard', {})
             .then((res) => {
                 console.log("------ axios Get 성공---------");
@@ -189,9 +179,9 @@ export default {
                 }
                 this.timelineList = temp;
             })
-            .catch((res) => {
-                if(res.response && res.response.status === 401){
-                    this.getNewToken(this.getTimelineData());
+            .catch((err) => {
+                if(err.response && err.response.status === 401){
+                    this.getNewToken(this.getTimelineData);
                 }
             })
         }

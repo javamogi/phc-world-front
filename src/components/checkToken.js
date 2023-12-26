@@ -1,4 +1,4 @@
-import axios from 'axios'
+import Axios from '@/index'
 export default{
     created() {
         this.checkToken();
@@ -10,21 +10,11 @@ export default{
                 this.$router.push('/login');
             }
         }, 
-        getNewToken(callback = () => {}){
-            const token = this.$store.getters.getRefreshToken;
-            const grantType = "Bearer "
-            const apiUrl = process.env.VUE_APP_API_URL;
-            const instance = axios.create({
-                baseURL: apiUrl,
-                headers: {
-                    Authorization: grantType + token
-                }
-            })
-    
-            instance
+        getNewToken(callback){
+            this.$store.dispatch('setToken', this.$store.getters.getRefreshToken);
+            Axios
             .get('/api/users/newToken', {})
             .then((res) => {
-                console.log(res);
                 if(res.status === 200){
                     this.$store.dispatch('setToken', res.data.accessToken);
                     this.$store.dispatch('setGrantType', res.data.grantType);
@@ -32,8 +22,9 @@ export default{
                     callback();
                 }
             })
-            .catch((res) => {
-                console.error(res);
+            .catch((err) => {
+                console.log("new token 요청 실패");
+                console.error(err);
             })
         }
     }

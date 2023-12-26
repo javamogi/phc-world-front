@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import axios from 'axios'
 import authMixin from '@/components/checkToken'
+import Axios from '@/index'
 
 export default {
     mixins: [authMixin],
@@ -107,16 +107,6 @@ export default {
             if(this.show){
                 return;
             }
-            const token = this.$store.getters.getToken;
-            const grantType = "Bearer ";
-            const apiUrl = process.env.VUE_APP_API_URL;
-            const instance = axios.create({
-                baseURL: apiUrl,
-                headers: {
-                    Authorization: grantType + token,
-                    "Content-Type": 'application/json'
-                }
-            })
 
             this.statusCode = '';
 
@@ -129,21 +119,28 @@ export default {
                 imageData: this.imageData
             })
 
-            instance
-            .patch(apiUrl + '/api/users', userData, {})
+            const headers = {
+                "Content-Type": 'application/json'
+            };
+
+            Axios
+            .patch('/api/users', userData, {headers})
             .then((res) => {
                 if(res.status == 200){
                     alert("변경 성공");
                 }
             })
-            .catch((res) => {
-                let statusCode = res.response.status;
+            .catch((err) => {
+                console.log(err);
+                let statusCode = err.response.status;
                 this.statusCode = statusCode;
                 this.show = true;
                 if(statusCode === 400){                    
-                    this.errorMessages = res.response.data.messages;
+                    this.errorMessages = err.response.data.messages;
+                } else if(statusCode === 401){
+                    this.getNewToken(this.submit);
                 } else {
-                    this.errorMessages = res.response.data.error;
+                    this.errorMessages = err.response.data.error;
                 }
             })
         },
@@ -164,31 +161,28 @@ export default {
 
                 reader.readAsDataURL(file);
             }
+        },
+        getUserInfo(){
+
+            Axios
+            .get('/api/users/userInfo', {})
+            .then((res) => {
+                this.id = res.data.id;
+                this.email = res.data.email;
+                this.name = res.data.name;
+                this.createDate = res.data.createDate;
+                this.imgUrl = res.data.profileImage;
+            })
+            .catch((err) => {
+                console.error(err);
+                if(err.response && err.response.status === 401){
+                    this.getNewToken(this.getUserInfo);
+                }
+            })
         }
     },
-    beforeMount(){
-        const token = this.$store.getters.getToken;
-        const grantType = "Bearer ";
-        const apiUrl = process.env.VUE_APP_API_URL;
-        const instance = axios.create({
-            baseURL: apiUrl,
-            headers: {
-                Authorization: grantType + token
-            }
-        })
-
-        instance
-        .get('/api/users/userInfo', {})
-        .then((res) => {
-            this.id = res.data.id;
-            this.email = res.data.email;
-            this.name = res.data.name;
-            this.createDate = res.data.createDate;
-            this.imgUrl = res.data.profileImage;
-        })
-        .catch((res) => {
-            console.error(res);
-        })
+    created(){
+        this.getUserInfo();
     }
 }
 </script>

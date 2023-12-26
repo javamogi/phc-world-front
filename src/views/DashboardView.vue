@@ -164,35 +164,40 @@ export default {
             this.countOfFreeBoard = data.countOfFreeBoard;
             this.countOfDiary = data.countOfDiary;
             this.countOfAlert = data.countOfAlert;
+        },
+        getTimelineData(){
+            const token = this.$store.getters.getToken;
+            const grantType = "Bearer "
+            const apiUrl = process.env.VUE_APP_API_URL;
+            const instance = axios.create({
+                baseURL: apiUrl,
+                headers: {
+                    Authorization: grantType + token
+                }
+            })
+
+            instance
+            .get('/api/dashboard', {})
+            .then((res) => {
+                console.log("------ axios Get 성공---------");
+                console.log(res.data);
+                this.setCounts(res.data);
+                let temp = res.data.timelineList;
+                for(let i = 0; i < temp.length; i++){
+                    let timeline = temp[i];
+                    timeline.icon = "fa fa-" + timeline.icon + " fa-fw"
+                }
+                this.timelineList = temp;
+            })
+            .catch((res) => {
+                if(res.response && res.response.status === 401){
+                    this.getNewToken(this.getTimelineData());
+                }
+            })
         }
     },
     created(){
-        const token = this.$store.getters.getToken;
-        const grantType = "Bearer "
-        const apiUrl = process.env.VUE_APP_API_URL;
-        const instance = axios.create({
-            baseURL: apiUrl,
-            headers: {
-                Authorization: grantType + token
-            }
-        })
-
-        instance
-        .get('/api/dashboard', {})
-        .then((res) => {
-            console.log("------ axios Get 성공---------");
-            console.log(res.data);
-            this.setCounts(res.data);
-            let temp = res.data.timelineList;
-            for(let i = 0; i < temp.length; i++){
-                let timeline = temp[i];
-                timeline.icon = "fa fa-" + timeline.icon + " fa-fw"
-            }
-            this.timelineList = temp;
-        })
-        .catch((res) => {
-            console.error(res);
-        })
+        this.getTimelineData();
     }
 }
 </script>

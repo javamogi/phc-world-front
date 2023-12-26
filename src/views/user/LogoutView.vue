@@ -8,6 +8,7 @@
 export default {
     created(){
         this.$store.dispatch('setToken', null);
+        this.$store.dispatch('setRefreshToken', null);
         this.$router.push('/');
         // const token = this.$store.getters.getToken;
         // const grantType = "Bearer "

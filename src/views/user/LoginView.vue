@@ -106,6 +106,7 @@ export default {
                 if(res.status === 200){
                     this.$store.dispatch('setToken', res.data.accessToken);
                     this.$store.dispatch('setGrantType', res.data.grantType);
+                    this.$store.dispatch('setRefreshToken', res.data.refreshToken);
                     this.$router.push('/');
                 }
             })

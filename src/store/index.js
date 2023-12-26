@@ -4,7 +4,8 @@ import createPersistedState from 'vuex-persistedstate'
 export default createStore({
   state: {
     token: null,
-    grantType: null
+    grantType: null,
+    refreshToken: null
   },
   getters: {
     isLogin(state){
@@ -15,6 +16,9 @@ export default createStore({
     },
     getGrantType(state){
       return state.grantType;
+    },
+    getRefreshToken(state){
+      return state.refreshToken;
     }
   },
   mutations: {
@@ -23,6 +27,9 @@ export default createStore({
     },
     setGrantType(state, _grantType){
       state.grantType = _grantType;
+    },
+    setRefreshToken(state, _refreshToken){
+      state.refreshToken = _refreshToken;
     }
   },
   actions: {
@@ -31,6 +38,9 @@ export default createStore({
     },
     setGrantType: ({commit}, _grantType) => {
       commit('setGrantType', _grantType);
+    },
+    setRefreshToken: ({commit}, _refreshToken) => {
+      commit('setRefreshToken', _refreshToken);
     }
   },
   modules: {

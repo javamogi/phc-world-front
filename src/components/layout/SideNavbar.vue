@@ -16,7 +16,7 @@
                     </ul>
                 </li> -->
                 <li>
-                    <a href="/freeboards"><i class="fa fa-list-alt"></i> Free Board</a>
+                    <a href="/boards"><i class="fa fa-list-alt"></i> Free Board</a>
                 </li>
                 <li>
                     <a href="/api/movies/page"><i class="glyphicon glyphicon-film"></i> 영화 검색</a>

@@ -5,6 +5,10 @@ import SignFormView from '../views/user/SignFormView.vue'
 import LoginView from '../views/user/LoginView.vue'
 import UpdateForm from '../views/user/UpdateForm.vue'
 import LogoutView from '../views/user/LogoutView.vue'
+import BoardListView from '../views/board/BoardListView.vue'
+import BoardView from '../views/board/BoardView.vue'
+import BoardFormView from '../views/board/BoardFormView.vue'
+import BoardModifyFormView from '../views/board/BoardModifyFormView.vue'
 
 const routes = [
   {
@@ -31,6 +35,26 @@ const routes = [
     path: '/logout',
     name: 'logout',
     component: LogoutView
+  },
+  {
+    path: '/boards',
+    name: 'boards',
+    component: BoardListView
+  },
+  {
+    path: '/board',
+    name: 'board',
+    component: BoardView
+  },
+  {
+    path: '/boardForm',
+    name: 'boardForm',
+    component: BoardFormView
+  },
+  {
+    path: '/boardModifyForm',
+    name: 'boardModifyForm',
+    component: BoardModifyFormView
   }
   // {
   //   path: '/about',

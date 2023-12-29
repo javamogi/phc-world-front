@@ -98,5 +98,8 @@ export default {
 </script>
 
 <style>
-
+#dataTables-example > tbody > tr > td .avatar {
+  width: 22px;
+  border: 1px solid #CCC;
+}
 </style>

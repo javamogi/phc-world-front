@@ -18,19 +18,19 @@
               <div class="col-lg-12 col-md-12">
                 <label for="title">제목</label>
                  <div class="form-group">
-                    <input type="text" class="form-control" id="exampleInputTitle" name="title" :value="title" :title="title" disabled>
+                    <input type="text" class="form-control" name="title" :value="title" :title="title" disabled>
                 </div>
              </div>
              <div class="col-lg-12 col-md-12">
-                <label for="title">작성일</label>
+                <label for="date">작성일</label>
                  <div class="form-group">
-                    <input type="text" class="form-control" id="exampleInputTitle" name="createDate" :value="createDate" title="작성일" disabled>
+                    <input type="text" class="form-control" name="createDate" :value="createDate" title="작성일" disabled>
                 </div>
              </div>
              <div class="col-lg-12 col-md-12">
                 <label for="userId">작성자</label>
                  <div class="form-group">
-                      <input type="text" class="form-control" id="exampleInputName" name="userId" :value="writer" disabled>
+                      <input type="text" class="form-control" name="userId" :value="writer" disabled>
                 </div>
               </div>
                <div class="col-lg-12 col-md-12">
@@ -42,48 +42,27 @@
                   </div>
              </div>
              
-             <!-- <div class="col-lg-12 col-md-12">
-             <article class="answer-template">
-                 <label for="contents"><h1 class="comments-title"><span class="fa fa-comments"></span> Comments<span id="countOfAnswer">{{countOfAnswer}}</span></h1></label>
-                {{#freeBoardAnswerList}}
-                <article class="answer-article" id="answer-article">
-                <div class="be-comment">
-                    <div class="be-img-comment">	
-                        <a href="/users/{{writer.id}}/profile">
-                            <img src="/images/profile/{{writer.profileImage}}" alt="" class="be-ava-comment">
-                        </a>
-                    </div>
-                    <div class="be-comment-content">
-                        <span class="be-comment-name">
-                            <a href="/users/{{writer.id}}/profile">{{writer.name}}</a>
-                        </span>
-                        <span class="be-comment-time">
-                            <a class="answer-get" href="/freeboards/{{freeBoard.id}}/answers/{{id}}">수정</a>
-                            <a class="answer-delete" href="/freeboards/{{freeBoard.id}}/answers/{{id}}">삭제</a>
-                            <i class="fa fa-clock-o"></i>
-                                {{updateDate}}
-                        </span>
-                        <p class="be-comment-text">
-                            {{{contents}}}
-                        </p>
-                    </div>
-                </div>
+             <div class="col-lg-12 col-md-12">
+                <article class="answer-template">
+                <label for="contents">
+                    <h1 class="comments-title">
+                        <span class="fa fa-comments"></span> 
+                        Comments
+                        <span id="countOfAnswer">{{countOfAnswerStr}}</span>
+                    </h1>
+                </label>
+                <BoardAnswer :saveEditedAnswer="saveEditedAnswer" :answers="answers" :deleteAnswer="deleteAnswer" @edit-answer="showEditForm"/>
                 </article>
-                {{/freeBoardAnswerList}}
-             </article>
-             </div> -->
+             </div>
              
                <div v-if="isLogin" class="col-lg-12 col-md-12">
-                 <form class="write-answer" id="form-group" action="/freeboards//answers" method="post">
+                 <form v-on:submit.prevent="registerAnswer" class="write-answer" id="form-group" action="#" method="post">
                       <label for="contents">댓글 쓰기</label>
                       <div class="form-group">
-                         <textarea class="col-lg-10 col-md-10" id="contents" name="contents" placeholder="내용"></textarea>
+                         <textarea class="col-lg-10 col-md-10" id="contents" name="contents" placeholder="내용" v-model="answerContents"></textarea>
                          <div class="col-lg-2 col-md-2">
                               <button type="submit" id="save_button" class="btn btn-default">댓글등록</button>
                           </div>
-                         <!-- <input type="hidden" name="writer" value="test">
-                         <input type="hidden" name="boardId" value="test">
-                             <div class="col-md-2 col-md-offset-10"></div> -->
                       </div>
                 </form>
               </div>
@@ -109,12 +88,15 @@
 </template>
 
 <script>
-// import axios from 'axios'
 import authMixin from '@/components/checkToken'
 import Axios from '@/index'
+import BoardAnswer from '@/components/BoardAnswer.vue'
 
 export default {
     mixins: [authMixin],
+    components: {
+        BoardAnswer
+    },
     data(){
         return {
             id: null,
@@ -122,9 +104,12 @@ export default {
             writer: null,
             contents: null,
             createDate: null,
+            countOfAnswer: null,
+            countOfAnswerStr: null,
             isLogin: this.$store.getters.isLogin,
             isDelete: null,
-            isModify: null
+            isModify: null,
+            answers: [],
         }
     },
     methods: {
@@ -152,6 +137,7 @@ export default {
             Axios
             .get('/api/freeboards/' + boardId, {})
             .then((res) => {
+                console.log(res);
                 this.id = res.data.freeboard.id;
                 this.title = res.data.freeboard.title;
                 this.writer = res.data.freeboard.writer.name;
@@ -159,6 +145,18 @@ export default {
                 this.createDate = res.data.freeboard.createDate;
                 this.isDelete = res.data.isDeleteAuthority;
                 this.isModify = res.data.isModifyAuthority;
+                this.countOfAnswer = res.data.freeboard.countOfAnswer;
+                if(this.countOfAnswer > 0){
+                    this.countOfAnswerStr = "[" + this.countOfAnswer + "]";
+                }
+                const answersWithEditingState = res.data.freeboard.answers.map(
+                    answer => ({
+                        ...answer,
+                        isEditing: false,
+                        editedText: ''
+                    })
+                );
+                this.answers = answersWithEditingState;
             })
             .catch((err) => {
                 console.error(err);
@@ -166,7 +164,83 @@ export default {
                     this.getNewToken(this.deleteBoard);
                 }
             })
-        }
+        },
+        registerAnswer(){
+            const headers = {
+                "Content-Type": 'application/json'
+            };
+
+            const answerData = JSON.stringify({
+                boardId: this.id,
+                contents: this.answerContents
+            })
+
+            Axios
+            .post('/api/freeboards/answers', answerData, {headers})
+            .then((res) => {
+                console.log(res);
+                this.answers.push(res.data);
+                this.answerContents = '';
+                this.countOfAnswer = this.countOfAnswer + 1;
+                if(this.countOfAnswer > 0){
+                    this.countOfAnswerStr = "[" + this.countOfAnswer + "]";
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                if(err.response && err.response.status === 401){
+                    this.getNewToken(this.registerAnswer);
+                }
+            })
+        },
+        deleteAnswer(index, answerId) {
+            Axios
+            .delete('/api/freeboards/answers/' + answerId, {})
+            .then((res) => {
+                console.log(res);
+                this.answers.splice(index, 1);
+                this.countOfAnswer = this.countOfAnswer - 1;
+                if(this.countOfAnswer > 0){
+                    this.countOfAnswerStr = "[" + this.countOfAnswer + "]";
+                } else {
+                    this.countOfAnswerStr = '';
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                if(err.response && err.response.status === 401){
+                    this.getNewToken(this.deleteAnswer);
+                }
+            })
+        },
+        showEditForm(index) {
+            this.answers[index].isEditing = true;
+        },
+        saveEditedAnswer(index) {
+            const headers = {
+                "Content-Type": 'application/json'
+            };
+
+            const answerData = JSON.stringify({
+                answerId: this.answers[index].id,
+                contents: this.answers[index].contents
+            })
+
+            Axios
+            .patch('/api/freeboards/answers', answerData, {headers})
+            .then((res) => {
+                if(res.status === 200){
+                    this.answers[index].isEditing = false;
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                if(err.response && err.response.status === 401){
+                    this.getNewToken(this.deleteAnswer);
+                }
+            })
+        },
+        
     },
     created(){
         this.getBoardData();
@@ -175,5 +249,5 @@ export default {
 </script>
 
 <style>
-
+@import '../../../public/static/vendor/bootstrap/css/freeBoard.css';
 </style>

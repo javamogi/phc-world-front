@@ -25,8 +25,8 @@
         <div class='form-group'>
             <textarea v-model="answer.contents" class='col-lg-10 col-md-10'></textarea>
             <div class='col-lg-2 col-md-2'>
-                <button type="button" @click="saveEditedAnswer(index, answer.id)" class='btn btn-default'>수정</button>
-                <!-- <button type="button" @click="saveEditedAnswer" class='btn btn-default'>취소</button> -->
+                <button type="button" @click="saveEditedAnswer(index)" class='answer-get'>수정</button>
+                <!-- <button type="button" class='answer-get'>취소</button> -->
             </div>
         </div>
     </div>

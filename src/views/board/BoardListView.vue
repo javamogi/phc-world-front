@@ -32,7 +32,7 @@
                                         <td>
                                             <router-link :to="{name: 'board', query: {id: board.id}}">{{board.title}}</router-link>
                                             <span v-if="board.isNew" class="badge badge-danger">New</span>
-                                            <span v-if="board.count > 0" class="badge badge-primary">{{board.countOfAnswer}}</span>
+                                            <span v-if="board.countOfAnswer > 0" class="badge badge-primary">{{board.countOfAnswer}}</span>
                                         </td>
                                         <td id="date">{{board.createDate}}</td>
                                         <td class="center">

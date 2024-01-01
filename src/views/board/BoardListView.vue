@@ -87,6 +87,12 @@ export default {
             .catch((err) => {
                 if(err.response && err.response.status === 401){
                     this.getNewToken(this.getFreeBoardData);
+                } else {
+                    alert("다시 로그인하세요.");
+                    this.$store.dispatch('setToken', null);
+                    this.$store.dispatch('setGrantType', null);
+                    this.$store.dispatch('setRefreshToken', null);
+                    this.$router.push('/login');
                 }
             })
         }
